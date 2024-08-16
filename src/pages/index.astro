@@ -50,6 +50,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     align-items: center;
     gap: 1rem;
     padding: 3rem 1rem;
+    background-color: #637a3a;
   }
 
   h2 {
@@ -86,9 +87,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     button {
       height: 2.5rem;
-      background-color: #400212;
-      border: 1px solid #400212;
-      color: #fff;
+      background-color: #fff;
+      border: 1px solid #000;
+      color: #000;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #f1f1f1;
+      }
     }
   }
 
@@ -142,6 +148,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     const inputs = e.target;
 
+    if (
+      inputs[0].value === "" &&
+      inputs[1].value === "" &&
+      inputs[2].value === "" &&
+      inputs[3].value === "" &&
+      inputs[4].value === "" &&
+      inputs[5].value === "" &&
+      inputs[6].value === ""
+    )
+      return;
+
     animals.push({
       nsg: inputs[0].value,
       name: inputs[1].value,
@@ -161,9 +178,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     inputs[4].value = "";
     inputs[5].value = "";
     inputs[6].value = "";
+
+    renderTable();
   });
 
   const renderTable = () => {
+    bodyTable.innerHTML = "";
+
     JSON.parse(localStorage.getItem("animals")).map(
       (animal) =>
         (bodyTable.innerHTML += `
