@@ -1,0 +1,184 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <div class="wrapper-content">
+    <h2>Registro de animal</h2>
+    <div class="image-container">
+      <img
+        src="/images/logo.webp"
+        alt="Logo Servicio de Veterinaria y Remonta del Ejército"
+      />
+    </div>
+    <form>
+      <input type="text" id="nsg" placeholder="NSG" />
+      <input type="text" id="name" placeholder="Nombre" />
+      <input type="text" id="birthdate" placeholder="Nacimiento" />
+      <input type="text" id="gender" placeholder="Sexo" />
+      <input type="text" id="color" placeholder="Color" />
+      <input type="text" id="unit" placeholder="Unidad" />
+      <input type="text" id="place" placeholder="Lugar" />
+      <button>Guardar</button>
+    </form>
+
+    <h2>Lista de animales</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>NSG</th>
+            <th>NOMBRE</th>
+            <th>NACIMIENTO</th>
+            <th>SEXO</th>
+            <th>COLOR</th>
+            <th>UNIDAD</th>
+            <th>LUGAR</th>
+          </tr>
+        </thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .wrapper-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem 1rem;
+  }
+
+  h2 {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    img {
+      width: 5rem;
+      text-align: center;
+    }
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 5rem;
+
+    @media only screen and (min-width: 768px) {
+      width: 30rem;
+    }
+
+    input {
+      height: 2.5rem;
+      border: 1px solid #000;
+      padding: 0 0.5rem;
+    }
+
+    button {
+      height: 2.5rem;
+      background-color: #400212;
+      border: 1px solid #400212;
+      color: #fff;
+    }
+  }
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    margin: 0 auto;
+    padding: 0;
+    border-collapse: collapse;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+
+    th,
+    td {
+      border: 1px solid #000;
+      padding: 0.5rem;
+    }
+
+    th:first-child {
+      width: 8rem;
+    }
+
+    th:nth-child(2),
+    th:nth-child(6) {
+      width: 15rem;
+    }
+
+    th:nth-child(3),
+    th:nth-child(7) {
+      width: 10rem;
+    }
+
+    th:nth-child(4),
+    th:nth-child(5) {
+      width: 5rem;
+    }
+  }
+</style>
+
+<script>
+  const form = document.querySelector("form");
+  const bodyTable = document.querySelector("#body");
+
+  const animals = JSON.parse(localStorage.getItem("animals")) || [];
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const inputs = e.target;
+
+    animals.push({
+      nsg: inputs[0].value,
+      name: inputs[1].value,
+      birthdate: inputs[2].value,
+      gender: inputs[3].value,
+      color: inputs[4].value,
+      unit: inputs[5].value,
+      place: inputs[6].value,
+    });
+
+    localStorage.setItem("animals", JSON.stringify(animals));
+
+    inputs[0].value = "";
+    inputs[1].value = "";
+    inputs[2].value = "";
+    inputs[3].value = "";
+    inputs[4].value = "";
+    inputs[5].value = "";
+    inputs[6].value = "";
+  });
+
+  const renderTable = () => {
+    JSON.parse(localStorage.getItem("animals")).map(
+      (animal) =>
+        (bodyTable.innerHTML += `
+          <tr>
+          <td>${animal.nsg}</td>
+          <td>${animal.name}</td>
+          <td>${animal.birthdate}</td>
+          <td>${animal.gender}</td>
+          <td>${animal.color}</td>
+          <td>${animal.unit}</td>
+          <td>${animal.place}</td>
+        </tr>
+          `)
+    );
+  };
+
+  window.addEventListener("DOMContentLoaded", () => renderTable());
+</script>
